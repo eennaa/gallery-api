@@ -31,4 +31,4 @@ Route::group([
 
 });
 
-Route::resource('galleryOVO', 'GalleryController');
+Route::resource('gallery', 'GalleryController');

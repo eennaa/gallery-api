@@ -12,9 +12,20 @@ class GalleryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Gallery::with('user', 'images')->get();
+        $searchTerm = $request['query'];
+        $galleries = Gallery::with('user', 'images')
+                                ->whereHas('user', function($galleries) use ($searchTerm) {
+                                    $galleries->where('title', 'like', '%'.$searchTerm.'%')
+                                        ->orWhere('description', 'like', '%'.$searchTerm.'%')
+                                        ->orWhere('first_name', 'like', '%'.$searchTerm.'%')
+                                        ->orWhere('last_name', 'like', '%'.$searchTerm.'%');                                    ;
+                                })
+                                ->orderBy('created_at', 'DESC')
+                                ->paginate(10);         
+
+        return response()->json($galleries);
     }
 
     /**

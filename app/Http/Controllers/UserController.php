@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Gallery;
+
 
 class UserController extends Controller
 {
@@ -38,5 +40,16 @@ class UserController extends Controller
 
         // return redirect('/login')->withErrors([
         //                             'message' => 'Please check your email account. We sent you verification link']);
+    }
+    
+    public function show(Gallery $gallery) {
+    {
+        $galleries = Gallery::with('user', 'images')
+                ->where('user_id', $gallery->user_id)
+                ->orderBy('created_at', 'DESC')
+                ->paginate(10);
+
+        return response()->json($galleries);
+    }
     }
 }

@@ -33,3 +33,4 @@ Route::group([
 });
 
 Route::resource('gallery', 'GalleryController');
+Route::get('user/{id}', 'UserController@show');

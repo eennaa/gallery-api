@@ -15,6 +15,7 @@ class GalleryController extends Controller
     public function index(Request $request)
     {
         $searchTerm = $request['query'];
+        $page = $request['page'];
         $galleries = Gallery::with('user', 'images')
                                 ->whereHas('user', function($galleries) use ($searchTerm) {
                                     $galleries->where('title', 'like', '%'.$searchTerm.'%')
@@ -23,7 +24,8 @@ class GalleryController extends Controller
                                         ->orWhere('last_name', 'like', '%'.$searchTerm.'%');                                    ;
                                 })
                                 ->orderBy('created_at', 'DESC')
-                                ->paginate(10);         
+                                ->paginate(3);
+               
 
         return response()->json($galleries);
     }

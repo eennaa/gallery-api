@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class GalleryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['index', 'show']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,6 +20,7 @@ class GalleryController extends Controller
     {
         $searchTerm = $request['query'];
         $page = $request['page'];
+
         $galleries = Gallery::with('user', 'images')
                                 ->whereHas('user', function($galleries) use ($searchTerm) {
                                     $galleries->where('title', 'like', '%'.$searchTerm.'%')
@@ -59,7 +64,9 @@ class GalleryController extends Controller
      */
     public function show(Gallery $gallery)
     {
-        return Gallery::with('user', 'images')->findOrFail($gallery->id);
+        $gallery = Gallery::with('user', 'images', 'comments.user')->findOrFail($gallery->id);
+
+        return response()->json($gallery);
     }
 
     /**

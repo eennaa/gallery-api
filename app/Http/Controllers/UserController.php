@@ -21,7 +21,6 @@ class UserController extends Controller
                                     'email' => 'bail|required|email',
                                     'password' => 'bail|required|min:8|confirmed|regex:/^(?=.*?[0-9])$/',
                                     'password_confirmation' => 'required',
-                                    // 'checkbox' =>'required',
                                     ]);
                  
         $user = \App\User::create([
@@ -30,16 +29,8 @@ class UserController extends Controller
             'email' => request('email'),
             'password' => bcrypt(request('password'))
         ]);
-
-        // $verifyUser = \App\VerifyUser::create([
-        //     'user_id' => $user->id,
-        //     'token' => str_random(40)
-        // ]);
         
         auth()->login($user);
-
-        // return redirect('/login')->withErrors([
-        //                             'message' => 'Please check your email account. We sent you verification link']);
     }
     
     public function show(Gallery $gallery) {

@@ -24,7 +24,7 @@ class GalleryController extends Controller
                                         ->orWhere('last_name', 'like', '%'.$searchTerm.'%');                                    ;
                                 })
                                 ->orderBy('created_at', 'DESC')
-                                ->paginate(3);
+                                ->paginate(10);
                
 
         return response()->json($galleries);
@@ -94,5 +94,18 @@ class GalleryController extends Controller
     public function destroy(Gallery $gallery)
     {
         //
+    }
+
+    public function galleriesByUserId($id)
+    {
+        $galleries = Gallery::with('user', 'images')
+            ->where('user_id', $id)
+            ->orderBy('created_at', 'DESC')
+            ->paginate(10);
+        //return response()->json($galleries);
+        return response()->json([
+            'name' => 'Abigail',
+            'state' => 'CA'
+        ]);
     }
 }
